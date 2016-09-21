@@ -90,6 +90,19 @@ func (m *Member) Boards(field ...string) (boards []Board, err error) {
 	return
 }
 
+func (m *Member) Cards(filter string) (cards []Card, err error) {
+	body, err := m.client.Get("/members/" + m.Id + "/cards/" + filter)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(body, &cards)
+	for i := range cards {
+		cards[i].client = m.client
+	}
+	return
+}
+
 func (m *Member) Notifications() (notifications []Notification, err error) {
 	body, err := m.client.Get("/members/" + m.Id + "/notifications")
 	if err != nil {
