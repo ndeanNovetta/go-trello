@@ -18,7 +18,9 @@ package trello
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
+	"strings"
 )
 
 type Card struct {
@@ -187,4 +189,19 @@ func (c *Card) AddComment(text string) (*Action, error) {
 	}
 	newAction.client = c.client
 	return newAction, nil
+}
+
+func (c *Card) Update() error {
+	payload := url.Values{}
+	payload.Set("name", c.Name)
+	payload.Set("desc", c.Desc)
+	payload.Set("closed", fmt.Sprintf("%t", c.Closed))
+	payload.Set("idMembers", strings.Join(c.IdMembers, ","))
+	payload.Set("due", c.Due)
+
+	body, err := c.client.Put("/cards/"+c.Id, payload)
+	if err != nil {
+		return fmt.Errorf("Error [%v] while making put. Response [[%s]]", err, body)
+	}
+	return nil
 }
