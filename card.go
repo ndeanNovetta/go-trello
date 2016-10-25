@@ -197,6 +197,7 @@ func (c *Card) Update() error {
 	payload.Set("desc", c.Desc)
 	payload.Set("closed", fmt.Sprintf("%t", c.Closed))
 	payload.Set("idMembers", strings.Join(c.IdMembers, ","))
+	payload.Set("idList", c.IdList)
 	payload.Set("due", c.Due)
 
 	body, err := c.client.Put("/cards/"+c.Id, payload)
